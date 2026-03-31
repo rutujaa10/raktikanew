@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Download, Trash2, Search } from "lucide-react";
 import { toast } from "sonner";
+import { API_BASE_URL } from "@/config";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -32,7 +33,7 @@ export default function SubmissionsTable({ endpoint, columns }: SubmissionsTable
     setLoading(true);
     try {
       const token = localStorage.getItem("adminToken");
-      const res = await fetch(`http://localhost:5000/api/admin/${endpoint}?page=${page}&limit=10&search=${search}`, {
+      const res = await fetch(`${API_BASE_URL}/api/admin/${endpoint}?page=${page}&limit=10&search=${search}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       const result = await res.json();
@@ -56,7 +57,7 @@ export default function SubmissionsTable({ endpoint, columns }: SubmissionsTable
   const handleDelete = async (id: string) => {
     try {
       const token = localStorage.getItem("adminToken");
-      const res = await fetch(`http://localhost:5000/api/admin/${endpoint}/${id}`, {
+      const res = await fetch(`${API_BASE_URL}/api/admin/${endpoint}/${id}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` }
       });

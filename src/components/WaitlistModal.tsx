@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { useTranslation } from "react-i18next";
+import { API_BASE_URL } from "@/config";
 
 const waitlistSchema = z.object({
   name: z.string().trim().min(1, "Name is required").max(100),
@@ -53,7 +54,7 @@ const WaitlistModal = ({ open, onOpenChange }: WaitlistModalProps) => {
       
       waitlistSchema.parse(payload);
 
-      const response = await fetch("http://localhost:5000/api/waitlist", {
+      const response = await fetch(`${API_BASE_URL}/api/waitlist`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

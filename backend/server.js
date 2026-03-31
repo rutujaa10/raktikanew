@@ -19,15 +19,23 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-mongoose.connect(process.env.ATLASDB_URL, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
-.then(() => console.log(" Connected to MongoDB Atlas"))
-.catch((err) => {
-  console.error(" MongoDB Connection Error:", err);
-  process.exit(1);
-});
+let isConnected;
+
+const connectDB = async () => {
+  if (isConnected) return;
+  try {
+    const db = await mongoose.connect(process.env.ATLASDB_URL, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+    isConnected = db.connections[0].readyState;
+    console.log(" Connected to MongoDB Atlas");
+  } catch (err) {
+    console.error(" MongoDB Connection Error:", err);
+  }
+};
+
+connectDB();
 
 app.get("/", (req, res) => {
   res.json({
@@ -51,6 +59,10 @@ app.use((err, req, res, next) => {
   });
 });
 
-app.listen(PORT, () => {
-  console.log(` Server is running on port ${PORT}`);
-});
+if (process.env.NODE_ENV !== "production" && !process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(` Server is running on port ${PORT}`);
+  });
+}
+
+export default app;
