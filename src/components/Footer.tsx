@@ -1,6 +1,8 @@
 import { Linkedin, Instagram, Twitter } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 const Footer = () => {
+  const { t } = useTranslation();
   return (
     <footer className="bg-primary text-white py-12">
       <div className="container mx-auto px-4">
@@ -41,14 +43,14 @@ const Footer = () => {
 
           {/* Company Info */}
           <div className="text-center space-y-2">
-            <p className="text-white/90 font-medium">RootNova Technologies Pvt. Ltd.</p>
-            <p className="text-white/70">Mumbai, India</p>
+            <p className="text-white/90 font-medium">{t("footer.company")}</p>
+            <p className="text-white/70">{t("footer.location")}</p>
           </div>
 
           {/* Copyright */}
           <div className="pt-6 border-t border-white/20 w-full text-center">
             <p className="text-white/70 text-sm">
-              © 2025 RootNova | All Rights Reserved
+              {t("footer.copyright")}
             </p>
           </div>
         </div>

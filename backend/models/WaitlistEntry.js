@@ -17,10 +17,20 @@ const waitlistSchema = new mongoose.Schema({
     required: true,
     trim: true
   },
-  interests: {
+  age: {
+    type: Number,
+    required: true,
+    min: 10,
+    max: 100
+  },
+  address: {
     type: String,
     required: true,
     trim: true
+  },
+  consentForTesting: {
+    type: Boolean,
+    required: true
   },
   createdAt: {
     type: Date,

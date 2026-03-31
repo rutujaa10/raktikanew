@@ -4,6 +4,11 @@ import dotenv from "dotenv";
 import cors from "cors";
 import contactRouter from "./routes/contact.js";
 import waitlistRouter from "./routes/waitlist.js";
+import adminRouter from "./routes/admin.js";
+import dns from "dns";
+
+// Force Node.js to use Google public DNS to resolve SRV records
+dns.setServers(["8.8.8.8", "8.8.4.4"]);
 
 dotenv.config();
 
@@ -36,6 +41,7 @@ app.get("/", (req, res) => {
 
 app.use("/api/contact", contactRouter);
 app.use("/api/waitlist", waitlistRouter);
+app.use("/api/admin", adminRouter);
 
 app.use((err, req, res, next) => {
   console.error("Server error:", err);

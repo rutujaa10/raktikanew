@@ -1,22 +1,25 @@
 import { TrendingUp, DollarSign, Activity } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import { useTranslation } from "react-i18next";
 
 const Impact = () => {
+  const { t } = useTranslation();
+
   const stats = [
     {
       icon: TrendingUp,
       value: "70%",
-      description: "of women in India delay reproductive tests due to cost or inaccessibility",
+      description: t("impact.stat1"),
     },
     {
       icon: DollarSign,
       value: "60%",
-      description: "reduction in diagnostic costs with Raktika",
+      description: t("impact.stat2"),
     },
     {
       icon: Activity,
       value: "5+",
-      description: "hormonal markers supported, with more to come",
+      description: t("impact.stat3"),
     },
   ];
 
@@ -31,10 +34,10 @@ const Impact = () => {
       <div className="container mx-auto px-4 relative z-10">
         <div className="text-center mb-16 space-y-4">
           <h2 className="text-4xl md:text-5xl font-bold text-white">
-            Shaping the Future of Women's Health
+            {t("impact.title")}
           </h2>
           <p className="text-xl text-white/90 max-w-2xl mx-auto">
-            Making healthcare accessible and affordable for everyone
+            {t("impact.subtitle")}
           </p>
         </div>
 

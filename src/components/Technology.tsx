@@ -1,40 +1,43 @@
 import { Cpu, FlaskConical, Layers, ArrowRight } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import { useTranslation } from "react-i18next";
 
 const Technology = () => {
+  const { t } = useTranslation();
+
   const techPoints = [
     {
       icon: Cpu,
-      title: "Hardware",
-      description: "Low-cost optical detection module with smart illumination and emission filtering.",
+      title: t("technology.t1Title"),
+      description: t("technology.t1Desc"),
     },
     {
       icon: FlaskConical,
-      title: "Software",
-      description: "AI/ML model processes fluorescence intensity for accurate biomarker quantification.",
+      title: t("technology.t2Title"),
+      description: t("technology.t2Desc"),
     },
     {
       icon: Layers,
-      title: "Integration",
-      description: "Works seamlessly with standard FIA/LFA strips.",
+      title: t("technology.t3Title"),
+      description: t("technology.t3Desc"),
     },
   ];
 
   const steps = [
     {
       number: "01",
-      title: "Insert/Scan Strip",
-      description: "Place your test strip in the device",
+      title: t("technology.s1Title"),
+      description: t("technology.s1Desc"),
     },
     {
       number: "02",
-      title: "Capture Using Raktika",
-      description: "Device automatically captures fluorescence data",
+      title: t("technology.s2Title"),
+      description: t("technology.s2Desc"),
     },
     {
       number: "03",
-      title: "Get Instant Report",
-      description: "Receive detailed results on your smartphone app",
+      title: t("technology.s3Title"),
+      description: t("technology.s3Desc"),
     },
   ];
 
@@ -43,9 +46,9 @@ const Technology = () => {
       <div className="container mx-auto px-4">
         <div className="text-center mb-16 space-y-4">
           <h2 className="text-4xl md:text-5xl font-bold text-primary">
-            Technology & Innovation
+            {t("technology.title")}
           </h2>
-          <p className="text-xl text-muted-foreground">How Raktika Works</p>
+          <p className="text-xl text-muted-foreground">{t("technology.subtitle")}</p>
         </div>
 
         {/* Technology Components */}
@@ -70,7 +73,7 @@ const Technology = () => {
         {/* 3-Step Process */}
         <div className="max-w-5xl mx-auto">
           <h3 className="text-3xl font-bold text-center mb-12 text-primary">
-            Simple 3-Step Process
+            {t("technology.processTitle")}
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {steps.map((step, index) => (

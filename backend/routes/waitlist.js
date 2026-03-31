@@ -15,7 +15,7 @@ const validatePhone = (phone) => {
 
 router.post("/", async (req, res) => {
   try {
-    const { name, email, phone, interests } = req.body;
+    const { name, email, phone, age, address, consentForTesting } = req.body;
 
     if (!name || name.trim() === "") {
       return res.status(400).json({
@@ -38,10 +38,24 @@ router.post("/", async (req, res) => {
       });
     }
 
-    if (!interests || interests.trim() === "") {
+    if (age === undefined || typeof age !== 'number' || age < 10 || age > 100) {
       return res.status(400).json({
         success: false,
-        error: "Interests field is required"
+        error: "Valid age between 10 and 100 is required"
+      });
+    }
+
+    if (!address || address.trim() === "") {
+      return res.status(400).json({
+        success: false,
+        error: "Address is required"
+      });
+    }
+
+    if (consentForTesting === undefined || typeof consentForTesting !== 'boolean') {
+      return res.status(400).json({
+        success: false,
+        error: "Consent for testing (Yes/No) is required"
       });
     }
 
@@ -49,7 +63,9 @@ router.post("/", async (req, res) => {
       name: name.trim(),
       email: email.trim().toLowerCase(),
       phone: phone.trim(),
-      interests: interests.trim()
+      age: Number(age),
+      address: address.trim(),
+      consentForTesting
     });
 
     await waitlistEntry.save();

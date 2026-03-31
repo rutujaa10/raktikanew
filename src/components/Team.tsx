@@ -1,5 +1,6 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { useTranslation } from "react-i18next";
 
 // Import images
 import teamKavya from "@/assets/team-kavya.jpg";
@@ -8,28 +9,30 @@ import teamVrushali from "@/assets/team-vrushali.jpg";
 import teamShlok from "@/assets/team-shlok.jpg";
 
 const Team = () => {
+  const { t } = useTranslation();
+
   const teamMembers = [
     {
       name: "Kavya Solanke",
-      role: "Product Lead",
+      role: t("team.roles.productLead"),
       initials: "KS",
       image: teamKavya,
     },
     {
       name: "Aastik Pol",
-      role: "Operations",
+      role: t("team.roles.operations"),
       initials: "AP",
       image: teamAastik,
     },
     {
       name: "Vrushali",
-      role: "Product Lead",
+      role: t("team.roles.productLead"),
       initials: "V",
       image: teamVrushali,
     },
     {
       name: "Shlok",
-      role: "Hardware Engineer",
+      role: t("team.roles.hardware"),
       initials: "S",
       image: teamShlok,
     },
@@ -40,10 +43,10 @@ const Team = () => {
       <div className="container mx-auto px-4">
         <div className="text-center mb-16 space-y-4">
           <h2 className="text-4xl md:text-5xl font-bold">
-            <span className="gradient-text">The Innovators Behind Raktika</span>
+            <span className="gradient-text">{t("team.title")}</span>
           </h2>
           <p className="text-xl text-muted-foreground">
-            Meet the passionate team driving healthcare innovation
+            {t("team.subtitle")}
           </p>
         </div>
 
@@ -74,9 +77,9 @@ const Team = () => {
 
         <Card className="border-2 border-accent/20 shadow-lg max-w-2xl mx-auto">
           <CardContent className="pt-8 pb-8 text-center">
-            <p className="text-lg font-semibold text-primary">+ RootNova Core Team Members</p>
+            <p className="text-lg font-semibold text-primary">{t("team.moreMembers")}</p>
             <p className="text-muted-foreground mt-2">
-              A dedicated group of engineers and innovators
+              {t("team.moreDesc")}
             </p>
           </CardContent>
         </Card>

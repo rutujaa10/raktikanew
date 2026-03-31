@@ -1,29 +1,32 @@
 import { Calendar, CheckCircle2, Rocket, Globe } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import { useTranslation } from "react-i18next";
 
 const Roadmap = () => {
+  const { t } = useTranslation();
+
   const milestones = [
     {
-      year: "2025",
-      title: "Prototype & Validation",
+      year: t("roadmap.m1Year"),
+      title: t("roadmap.m1Title"),
       icon: CheckCircle2,
       status: "current",
     },
     {
-      year: "2026",
-      title: "Pilot with Clinics & Labs",
+      year: t("roadmap.m2Year"),
+      title: t("roadmap.m2Title"),
       icon: Calendar,
       status: "upcoming",
     },
     {
-      year: "2027",
-      title: "Public Launch & Expansion to B2C",
+      year: t("roadmap.m3Year"),
+      title: t("roadmap.m3Title"),
       icon: Rocket,
       status: "future",
     },
     {
-      year: "Beyond",
-      title: "Global Scale & Integration with healthcare networks",
+      year: t("roadmap.m4Year"),
+      title: t("roadmap.m4Title"),
       icon: Globe,
       status: "vision",
     },
@@ -33,8 +36,8 @@ const Roadmap = () => {
     <section id="roadmap" className="py-20 bg-muted/30">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16 space-y-4">
-          <h2 className="text-4xl md:text-5xl font-bold text-primary">Future Roadmap</h2>
-          <p className="text-xl text-muted-foreground">Our journey to transform healthcare</p>
+          <h2 className="text-4xl md:text-5xl font-bold text-primary">{t("roadmap.title")}</h2>
+          <p className="text-xl text-muted-foreground">{t("roadmap.subtitle")}</p>
         </div>
 
         <div className="max-w-5xl mx-auto">
@@ -48,7 +51,7 @@ const Roadmap = () => {
                 {milestone.status === "current" && (
                   <div className="absolute -top-3 left-1/2 -translate-x-1/2">
                     <span className="bg-accent text-white text-xs font-semibold px-3 py-1 rounded-full">
-                      Current
+                      {t("roadmap.current")}
                     </span>
                   </div>
                 )}

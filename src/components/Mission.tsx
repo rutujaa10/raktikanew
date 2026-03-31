@@ -1,24 +1,25 @@
 import { Target, Eye, Sparkles } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import { useTranslation } from "react-i18next";
 
 const Mission = () => {
+  const { t } = useTranslation();
+  
   const items = [
     {
       icon: Eye,
-      title: "Vision",
-      content:
-        "To democratize access to reproductive health diagnostics through affordable, portable, and intelligent devices.",
+      title: t("mission.vision"),
+      content: t("mission.visionContent"),
     },
     {
       icon: Target,
-      title: "Mission",
-      content:
-        "To integrate bioengineering, AI, and mobile technology to create reliable, user-friendly health diagnostic tools for every individual.",
+      title: t("mission.missionTitle"),
+      content: t("mission.missionContent"),
     },
     {
       icon: Sparkles,
-      title: "Motto",
-      content: "Science that Empowers Wellness.",
+      title: t("mission.motto"),
+      content: t("mission.mottoContent"),
     },
   ];
 

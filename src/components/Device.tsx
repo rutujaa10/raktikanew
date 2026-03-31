@@ -1,27 +1,30 @@
 import { Smartphone, Zap, Activity, Wifi } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import { useTranslation } from "react-i18next";
 
 const Device = () => {
+  const { t } = useTranslation();
+
   const features = [
     {
       icon: Smartphone,
-      title: "Clip-on optical fluorescence module",
-      description: "Seamlessly attaches to your smartphone",
+      title: t("device.f1Title"),
+      description: t("device.f1Desc"),
     },
     {
       icon: Zap,
-      title: "AI-driven analysis",
-      description: "Smart algorithms through smartphone app",
+      title: t("device.f2Title"),
+      description: t("device.f2Desc"),
     },
     {
       icon: Activity,
-      title: "Multiple test support",
-      description: "Lateral-flow and fluorescence-based tests",
+      title: t("device.f3Title"),
+      description: t("device.f3Desc"),
     },
     {
       icon: Wifi,
-      title: "Portable & rechargeable",
-      description: "Designed for precision and convenience",
+      title: t("device.f4Title"),
+      description: t("device.f4Desc"),
     },
   ];
 
@@ -30,11 +33,10 @@ const Device = () => {
       <div className="container mx-auto px-4">
         <div className="text-center mb-16 space-y-4">
           <h2 className="text-4xl md:text-5xl font-bold">
-            <span className="gradient-text">The Raktika Device</span>
+            <span className="gradient-text">{t("device.title")}</span>
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            An affordable, smartphone-integrated fluorescence detection system that enables at-home
-            hormone testing with laboratory-level precision.
+            {t("device.subtitle")}
           </p>
         </div>
 

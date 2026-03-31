@@ -17,7 +17,9 @@ const waitlistSchema = z.object({
   name: z.string().trim().min(1, "Name is required").max(100),
   email: z.string().trim().email("Invalid email address").max(255),
   phone: z.string().trim().min(10, "Phone number must be at least 10 digits").max(15),
-  interests: z.string().trim().min(1, "Please tell us why you're interested").max(500)
+  age: z.number({ invalid_type_error: "Valid age is required" }).min(10, "Age must be at least 10").max(100, "Age cannot exceed 100"),
+  address: z.string().trim().min(5, "Please provide a complete address").max(500),
+  consentForTesting: z.boolean({ required_error: "You must explicitly select Yes or No" })
 });
 
 interface WaitlistModalProps {
@@ -32,22 +34,31 @@ const WaitlistModal = ({ open, onOpenChange }: WaitlistModalProps) => {
     name: "",
     email: "",
     phone: "",
-    interests: ""
+    age: "",
+    address: "",
+    consentForTesting: null as boolean | null
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSubmitting(true);
 
     try {
-      waitlistSchema.parse(formData);
+      const payload = {
+        ...formData,
+        age: formData.age ? Number(formData.age) : undefined
+      };
+      
+      waitlistSchema.parse(payload);
 
       const response = await fetch("http://localhost:5000/api/waitlist", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(payload),
       });
 
       const data = await response.json();
@@ -57,7 +68,7 @@ const WaitlistModal = ({ open, onOpenChange }: WaitlistModalProps) => {
           title: t('waitlist.success'),
           description: t('waitlist.successMessage'),
         });
-        setFormData({ name: "", email: "", phone: "", interests: "" });
+        setFormData({ name: "", email: "", phone: "", age: "", address: "", consentForTesting: null });
         setErrors({});
         onOpenChange(false);
       } else {
@@ -79,6 +90,8 @@ const WaitlistModal = ({ open, onOpenChange }: WaitlistModalProps) => {
           variant: "destructive",
         });
       }
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -138,22 +151,71 @@ const WaitlistModal = ({ open, onOpenChange }: WaitlistModalProps) => {
           </div>
 
           <div>
-            <label htmlFor="interests" className="block text-sm font-medium mb-2">
-              {t('waitlist.interests')}
+            <label htmlFor="age" className="block text-sm font-medium mb-2">
+              Age
             </label>
-            <Textarea
-              id="interests"
-              value={formData.interests}
-              onChange={(e) => setFormData({ ...formData, interests: e.target.value })}
-              className={errors.interests ? "border-destructive" : ""}
-              rows={3}
+            <Input
+              id="age"
+              type="number"
+              min="10"
+              max="100"
+              value={formData.age}
+              onChange={(e) => setFormData({ ...formData, age: e.target.value })}
+              className={errors.age ? "border-destructive" : ""}
             />
-            {errors.interests && <p className="text-destructive text-sm mt-1">{errors.interests}</p>}
+            {errors.age && <p className="text-destructive text-sm mt-1">{errors.age}</p>}
           </div>
 
-          <Button type="submit" className="w-full" size="lg">
-            {t('waitlist.submit')}
+          <div>
+            <label htmlFor="address" className="block text-sm font-medium mb-2">
+              Address
+            </label>
+            <Textarea
+              id="address"
+              value={formData.address}
+              onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+              className={errors.address ? "border-destructive" : ""}
+              rows={3}
+            />
+            {errors.address && <p className="text-destructive text-sm mt-1">{errors.address}</p>}
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium mb-2">
+              Do you consent to participate in testing? <span className="text-destructive">*</span>
+            </label>
+            <div className="flex items-center gap-4 mt-2">
+              <label className="flex items-center gap-2 text-sm cursor-pointer">
+                <input
+                  type="radio"
+                  name="consent"
+                  className="w-4 h-4 text-primary"
+                  checked={formData.consentForTesting === true}
+                  onChange={() => setFormData({ ...formData, consentForTesting: true })}
+                />
+                Yes
+              </label>
+              <label className="flex items-center gap-2 text-sm cursor-pointer">
+                <input
+                  type="radio"
+                  name="consent"
+                  className="w-4 h-4 text-primary"
+                  checked={formData.consentForTesting === false}
+                  onChange={() => setFormData({ ...formData, consentForTesting: false })}
+                />
+                No
+              </label>
+            </div>
+            {errors.consentForTesting && <p className="text-destructive text-sm mt-1">{errors.consentForTesting}</p>}
+          </div>
+
+          <Button type="submit" disabled={isSubmitting} className="w-full" size="lg">
+            {isSubmitting ? "Submitting..." : t('waitlist.submit')}
           </Button>
+
+          <p className="text-xs text-muted-foreground text-center mt-4">
+            We respect your privacy. Your data will not be misused and will remain secure and confidential.
+          </p>
         </form>
       </DialogContent>
     </Dialog>
