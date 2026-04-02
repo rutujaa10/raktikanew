@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Download, Trash2, Search } from "lucide-react";
+import { Download, Trash2, Search, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { API_BASE_URL } from "@/config";
 import {
@@ -132,46 +132,52 @@ export default function SubmissionsTable({ endpoint, columns }: SubmissionsTable
         </Button>
       </div>
 
-      <div className="border rounded-md overflow-x-auto bg-white">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              {columns.map((col) => (
-                <TableHead key={col.key}>{col.label}</TableHead>
-              ))}
-              <TableHead className="w-[100px]">Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {loading ? (
-              <TableRow>
-                <TableCell colSpan={columns.length + 1} className="h-32 text-center text-muted-foreground">
-                  <div className="flex justify-center items-center h-full">Loading data...</div>
-                </TableCell>
+      <div className="border rounded-md overflow-hidden bg-white">
+        <div className="overflow-x-auto scrollbar-thin">
+          <Table>
+            <TableHeader>
+              <TableRow className="bg-muted/50">
+                {columns.map((col) => (
+                  <TableHead key={col.key} className="whitespace-nowrap py-3 px-4 font-semibold text-xs sm:text-sm">
+                    {col.label}
+                  </TableHead>
+                ))}
+                <TableHead className="w-[80px] py-3 px-4 text-xs sm:text-sm">Actions</TableHead>
               </TableRow>
-            ) : data.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={columns.length + 1} className="h-32 text-center text-muted-foreground">
-                  No entries found.
-                </TableCell>
-              </TableRow>
-            ) : (
-              data.map((item) => (
-                <TableRow key={item._id}>
-                  {columns.map((col) => (
-                    <TableCell key={col.key} className="max-w-[200px] truncate">
-                      {col.key === 'createdAt'
-                        ? new Date(item[col.key]).toLocaleDateString()
-                        : col.key === 'consentForTesting'
-                          ? (
-                            <span className={`px-2 py-1 rounded-full text-xs font-medium ${item[col.key] ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
-                              {item[col.key] ? 'Yes' : 'No'}
-                            </span>
-                          )
-                          : item[col.key]
-                      }
-                    </TableCell>
-                  ))}
+            </TableHeader>
+            <TableBody>
+              {loading ? (
+                <TableRow>
+                  <TableCell colSpan={columns.length + 1} className="h-32 text-center text-muted-foreground">
+                    <div className="flex justify-center items-center h-full">
+                      <Loader2 className="h-5 w-5 animate-spin mr-2" />
+                      Loading data...
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ) : data.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={columns.length + 1} className="h-32 text-center text-muted-foreground text-sm">
+                    No entries found.
+                  </TableCell>
+                </TableRow>
+              ) : (
+                data.map((item) => (
+                  <TableRow key={item._id} className="hover:bg-muted/30 transition-colors">
+                    {columns.map((col) => (
+                      <TableCell key={col.key} className="py-3 px-4 text-xs sm:text-sm max-w-[150px] sm:max-w-[250px] truncate">
+                        {col.key === 'createdAt'
+                          ? new Date(item[col.key]).toLocaleDateString()
+                          : col.key === 'consentForTesting'
+                            ? (
+                              <span className={`inline-flex px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-medium ${item[col.key] ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                                {item[col.key] ? 'Yes' : 'No'}
+                              </span>
+                            )
+                            : item[col.key]
+                        }
+                      </TableCell>
+                    ))}
                   <TableCell>
                     <AlertDialog>
                       <AlertDialogTrigger asChild>
@@ -200,13 +206,32 @@ export default function SubmissionsTable({ endpoint, columns }: SubmissionsTable
             )}
           </TableBody>
         </Table>
+        </div>
       </div>
 
-      <div className="flex justify-between items-center py-2">
-        <span className="text-sm text-muted-foreground font-medium">Page {page} of {totalPages || 1}</span>
-        <div className="flex gap-2">
-          <Button variant="outline" size="sm" onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1 || loading}>Previous</Button>
-          <Button variant="outline" size="sm" onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page >= totalPages || loading}>Next</Button>
+      <div className="flex flex-col sm:flex-row justify-between items-center gap-4 py-2 mt-2">
+        <span className="text-xs sm:text-sm text-muted-foreground font-medium">
+          Page {page} of {totalPages || 1}
+        </span>
+        <div className="flex gap-2 w-full sm:w-auto">
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="flex-1 sm:flex-none"
+            onClick={() => setPage(p => Math.max(1, p - 1))} 
+            disabled={page === 1 || loading}
+          >
+            Previous
+          </Button>
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="flex-1 sm:flex-none"
+            onClick={() => setPage(p => Math.min(totalPages, p + 1))} 
+            disabled={page >= totalPages || loading}
+          >
+            Next
+          </Button>
         </div>
       </div>
     </div>
