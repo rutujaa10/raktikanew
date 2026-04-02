@@ -36,6 +36,15 @@ export default function SubmissionsTable({ endpoint, columns }: SubmissionsTable
       const res = await fetch(`${API_BASE_URL}/api/admin/${endpoint}?page=${page}&limit=10&search=${search}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
+
+      if (!res.ok) {
+        const text = await res.text();
+        console.error("Fetch error response:", text);
+        toast.error(`Server error: ${res.status}. Check Vercel logs.`);
+        setLoading(false);
+        return;
+      }
+
       const result = await res.json();
       if (result.success) {
         setData(result.data);
@@ -61,6 +70,14 @@ export default function SubmissionsTable({ endpoint, columns }: SubmissionsTable
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` }
       });
+
+      if (!res.ok) {
+        const text = await res.text();
+        console.error("Delete error response:", text);
+        toast.error(`Error ${res.status} deleting entry`);
+        return;
+      }
+
       const result = await res.json();
       if (result.success) {
         toast.success("Entry deleted");

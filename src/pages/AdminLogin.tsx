@@ -19,16 +19,30 @@ export default function AdminLogin() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
+
+      // Better error handling for non-JSON responses
+      if (!res.ok) {
+        const contentType = res.headers.get("content-type");
+        if (contentType && contentType.includes("application/json")) {
+          const errorData = await res.json();
+          toast.error(errorData.error || "Invalid credentials");
+        } else {
+          const text = await res.text();
+          console.error("Non-JSON error response:", text);
+          toast.error(`Server error: ${res.status}. Check Vercel logs.`);
+        }
+        return;
+      }
+
       const data = await res.json();
       if (data.success) {
         localStorage.setItem("adminToken", data.token);
         toast.success("Login successful");
         navigate("/admin");
-      } else {
-        toast.error("Invalid credentials");
       }
     } catch (err) {
-      toast.error("Login failed. Check server connection.");
+      console.error("Login FETCH error:", err);
+      toast.error("Network error. Check server console/Vercel logs.");
     }
   };
 
