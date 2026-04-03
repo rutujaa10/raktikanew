@@ -4,7 +4,14 @@ import { Button } from "@/components/ui/button";
 import { useTranslation } from "react-i18next";
 import ThemeToggle from "./ThemeToggle";
 import LanguageSwitcher from "./LanguageSwitcher";
-import logo from "@/assets/logo.png"; // ✅ Import your logo image
+import logo from "@/assets/logo.png";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 
 const Header = () => {
   const { t } = useTranslation();
@@ -22,7 +29,14 @@ const Header = () => {
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
     if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
+      const offset = 80;
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - offset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth"
+      });
       setIsMobileMenuOpen(false);
     }
   };
@@ -40,68 +54,73 @@ const Header = () => {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled ? "bg-background/80 backdrop-blur-lg shadow-md" : "bg-transparent"
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+        isScrolled ? "bg-background/80 backdrop-blur-xl border-b border-border/40 shadow-sm" : "bg-transparent"
       }`}
     >
-      <nav className="container mx-auto px-4 py-4">
-<div className="flex items-center justify-between">
-  {/*  Logo Only */}
-  <button
-    onClick={() => scrollToSection("hero")}
-    className="flex items-center"
-  >
-    <img
-      src={logo}
-      alt="Raktika Logo"
-      className="w-20 md:w-15h-auto object-contain" // Adjust width if needed
-    />
-  </button>
-
+      <nav className="container mx-auto px-4 sm:px-6 py-4">
+        <div className="flex items-center justify-between">
+          {/* Logo */}
+          <button
+            onClick={() => scrollToSection("hero")}
+            className="flex items-center hover:opacity-80 transition-opacity"
+          >
+            <img
+              src={logo}
+              alt="Raktika Logo"
+              className="w-16 sm:w-20 h-auto object-contain"
+            />
+          </button>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-4">
+          <div className="hidden md:flex items-center space-x-6 lg:space-x-8">
             {navItems.map((item) => (
               <button
                 key={item.id}
                 onClick={() => scrollToSection(item.id)}
-                className="text-foreground/80 hover:text-foreground transition-colors font-medium"
+                className="text-foreground/70 hover:text-primary transition-colors font-medium text-sm lg:text-base"
               >
                 {item.label}
               </button>
             ))}
-            <ThemeToggle />
-            <LanguageSwitcher />
+            <div className="flex items-center space-x-2 pl-4 border-l border-border/50">
+              <ThemeToggle />
+              <LanguageSwitcher />
+            </div>
           </div>
 
-          {/* Mobile Menu Button */}
-          <div className="flex md:hidden items-center gap-2">
+          {/* Mobile Menu (Sheet) */}
+          <div className="flex md:hidden items-center gap-3">
             <ThemeToggle />
             <LanguageSwitcher />
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            >
-              {isMobileMenuOpen ? <X /> : <Menu />}
-            </Button>
+            <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
+              <SheetTrigger asChild>
+                <Button variant="ghost" size="icon" className="h-10 w-10">
+                  <Menu className="h-6 w-6" />
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="right" className="w-[300px] sm:w-[400px]">
+                <SheetHeader className="mb-8">
+                  <SheetTitle className="text-left flex items-center gap-2">
+                    <img src={logo} alt="Logo" className="w-12 h-auto" />
+                    <span className="gradient-text font-bold">Raktika</span>
+                  </SheetTitle>
+                </SheetHeader>
+                <div className="flex flex-col space-y-4">
+                  {navItems.map((item) => (
+                    <button
+                      key={item.id}
+                      onClick={() => scrollToSection(item.id)}
+                      className="block w-full text-left px-4 py-3 text-lg font-medium text-foreground/80 hover:text-primary hover:bg-muted rounded-xl transition-all"
+                    >
+                      {item.label}
+                    </button>
+                  ))}
+                </div>
+              </SheetContent>
+            </Sheet>
           </div>
         </div>
-
-        {/* Mobile Navigation */}
-        {isMobileMenuOpen && (
-          <div className="md:hidden mt-4 pb-4 space-y-3 animate-fade-in">
-            {navItems.map((item) => (
-              <button
-                key={item.id}
-                onClick={() => scrollToSection(item.id)}
-                className="block w-full text-left px-4 py-2 text-foreground/80 hover:text-foreground hover:bg-muted rounded-lg transition-colors font-medium"
-              >
-                {item.label}
-              </button>
-            ))}
-          </div>
-        )}
       </nav>
     </header>
   );

@@ -7,8 +7,9 @@ import waitlistRouter from "./routes/waitlist.js";
 import adminRouter from "./routes/admin.js";
 import dns from "dns";
 
-// Force Node.js to use Google public DNS to resolve SRV records
-dns.setServers(["8.8.8.8", "8.8.4.4"]);
+// Force Node.js to use Google and Cloudflare DNS to resolve shard hostnames
+// This fixes lookups in environments where the system DNS refuses or blocks Atlas shards
+dns.setServers(["8.8.8.8", "1.1.1.1", "8.8.4.4"]);
 
 dotenv.config();
 
@@ -49,15 +50,25 @@ const connectDB = async () => {
   }
 
   try {
-    const db = await mongoose.connect(process.env.ATLASDB_URL);
+    const db = await mongoose.connect(process.env.ATLASDB_URL, {
+      serverSelectionTimeoutMS: 30000, // Wait 30 seconds for all shards
+      family: 4 // Force IPv4
+    });
     isConnected = db.connections[0].readyState;
     console.log(" Connected to MongoDB Atlas");
   } catch (err) {
-    console.error(" MongoDB Connection Error:", err);
+    console.error(" MongoDB Connection Error Detail:", {
+      name: err.name,
+      message: err.message,
+      reason: err.reason || "No detailed reason"
+    });
   }
 };
 
+
 connectDB();
+
+
 
 app.get("/", (req, res) => {
   res.json({

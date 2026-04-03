@@ -64,7 +64,7 @@ const ChatWidget = () => {
 
       {/* Chat Window */}
       {isOpen && (
-        <Card className="fixed bottom-24 right-6 w-96 h-[500px] shadow-2xl z-50 animate-scale-in flex flex-col">
+        <Card className="fixed bottom-24 right-4 sm:right-6 w-[calc(100vw-2rem)] sm:w-96 h-[500px] max-h-[70vh] sm:max-h-[600px] shadow-2xl z-50 animate-scale-in flex flex-col border-primary/10">
           <CardHeader className="border-b">
             <CardTitle className="flex items-center gap-2">
               <MessageCircle className="h-5 w-5" />
